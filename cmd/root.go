@@ -4,6 +4,9 @@ import (
 	"fmt"
 	"os"
 
+	"terraform-plan-linter/internal/parser"
+	"terraform-plan-linter/internal/policy"
+
 	"github.com/spf13/cobra"
 )
 
@@ -14,7 +17,26 @@ var rootCmd = &cobra.Command{
 	Short: "Lint Terraform plans for anti-patterns and best practices",
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Printf("📄 Scanning plan file: %s\n", planFile)
-		// TODO: parse and evaluate plan
+
+		plan, err := parser.LoadPlan(planFile)
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "❌ Failed to parse plan: %v\n", err)
+			os.Exit(1)
+		}
+
+		var violations []policy.Violation
+		violations = append(violations, policy.CheckPublicS3(plan)...)
+		violations = append(violations, policy.CheckUntaggedBuckets(plan)...)
+		violations = append(violations, policy.CheckMissingPreventDestroy(plan)...)
+
+		if len(violations) == 0 {
+			fmt.Println("✅ No violations found.")
+			return
+		}
+
+		for _, v := range violations {
+			fmt.Printf("[Violation] %s: %s\n", v.Resource, v.Message)
+		}
 	},
 }
 

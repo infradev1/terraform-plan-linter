@@ -1,9 +1,20 @@
+// for local static analysis; for real provisioning, use 'aws configure'
 provider "aws" {
-  region = "us-west-2"
+  access_key = "MOCK"
+  secret_key = "MOCK"
+  region     = "us-west-2"
+  skip_credentials_validation = true
+  skip_metadata_api_check     = true
+  skip_requesting_account_id  = true
 }
 
 resource "aws_s3_bucket" "public_bucket" {
   bucket = "my-public-bucket-${random_id.suffix.hex}"
+  force_destroy = true
+}
+
+resource "aws_s3_bucket_acl" "public" {
+  bucket = aws_s3_bucket.public_bucket.id
   acl    = "public-read"
 }
 

@@ -1,8 +1,8 @@
 # 🧹 Terraform Plan Linter
 
-[![CI](https://github.com/your-username/terraform-plan-linter/actions/workflows/ci.yml/badge.svg)](https://github.com/your-username/terraform-plan-linter/actions)
+[![CI](https://github.com/CarlosLaraFP/terraform-plan-linter/actions/workflows/ci.yml/badge.svg)](https://github.com/CarlosLaraFP/terraform-plan-linter/actions)
 
-A fast, pluggable CLI to lint Terraform plans for dangerous anti-patterns and missing best practices. Reads Terraform .plan JSON output and flags anti-patterns (e.g. untagged AWS resources, public S3 buckets, no lifecycle policy).
+Go CLI to lint Terraform .plan JSON output and flag anti-patterns & missing best practices (e.g. untagged AWS resources, public S3 buckets, no lifecycle policy).
 
 ## ✨ Features
 
@@ -17,4 +17,7 @@ A fast, pluggable CLI to lint Terraform plans for dangerous anti-patterns and mi
 ## 🚀 Usage
 
 ```bash
-go run main.go --file testdata/sample-plan.json
+make plan
+make lint
+make test
+make clean

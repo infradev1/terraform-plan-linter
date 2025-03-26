@@ -22,12 +22,12 @@ func TestCheckPublicS3(t *testing.T) {
 		{
 			Address: "aws_s3_bucket.public_bucket",
 			Type:    "aws_s3_bucket",
-			Values:  map[string]interface{}{"acl": "public-read"},
+			Values:  map[string]any{"acl": "public-read"},
 		},
 		{
 			Address: "aws_s3_bucket.private_bucket",
 			Type:    "aws_s3_bucket",
-			Values:  map[string]interface{}{"acl": "private"},
+			Values:  map[string]any{"acl": "private"},
 		},
 	})
 
@@ -46,12 +46,12 @@ func TestCheckUntaggedBuckets(t *testing.T) {
 		{
 			Address: "aws_s3_bucket.untagged",
 			Type:    "aws_s3_bucket",
-			Values:  map[string]interface{}{}, // no tags
+			Values:  map[string]any{}, // no tags
 		},
 		{
 			Address: "aws_s3_bucket.tagged",
 			Type:    "aws_s3_bucket",
-			Values:  map[string]interface{}{"tags": map[string]interface{}{"env": "prod"}},
+			Values:  map[string]any{"tags": map[string]any{"env": "prod"}},
 		},
 	})
 
@@ -70,13 +70,13 @@ func TestCheckMissingPreventDestroy(t *testing.T) {
 		{
 			Address: "aws_db_instance.no_lifecycle",
 			Type:    "aws_db_instance",
-			Values:  map[string]interface{}{}, // no lifecycle
+			Values:  map[string]any{}, // no lifecycle
 		},
 		{
 			Address: "aws_s3_bucket.prevent_destroy_missing",
 			Type:    "aws_s3_bucket",
-			Values: map[string]interface{}{
-				"lifecycle": map[string]interface{}{
+			Values: map[string]any{
+				"lifecycle": map[string]any{
 					"prevent_destroy": false,
 				},
 			},
@@ -84,8 +84,8 @@ func TestCheckMissingPreventDestroy(t *testing.T) {
 		{
 			Address: "aws_s3_bucket.prevent_destroy_ok",
 			Type:    "aws_s3_bucket",
-			Values: map[string]interface{}{
-				"lifecycle": map[string]interface{}{
+			Values: map[string]any{
+				"lifecycle": map[string]any{
 					"prevent_destroy": true,
 				},
 			},

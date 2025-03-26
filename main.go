@@ -6,5 +6,5 @@ func main() {
 	cmd.Execute()
 }
 
-// go mod init app-restart-controller
+// go mod init terraform-plan-linter
 // go mod tidy
