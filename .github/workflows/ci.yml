@@ -25,3 +25,4 @@ jobs:
         make plan
         make lint
         make test
+        make clean
