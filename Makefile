@@ -6,7 +6,7 @@ PLAN_JSON=testdata/tf-plan.json
 plan:
 	cd terraform && terraform init
 	cd terraform && terraform plan -out=$(PLAN_OUT)
-	cat $(PLAN_OUT)
+	cd terraform && cat $(PLAN_OUT)
 	cd terraform && terraform show -json $(PLAN_OUT) > ../$(PLAN_JSON)
 	cat $(PLAN_JSON)
 
