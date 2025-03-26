@@ -1,13 +1,12 @@
 PLAN_OUT=tfplan.binary
 PLAN_JSON=testdata/tf-plan.json
 
-.PHONY: plan lint test clean
+#.PHONY: plan lint test clean
 
 plan:
-	cd terraform
-	terraform init
-	terraform plan -out=$(PLAN_OUT)
-	terraform show $(PLAN_OUT)
+	cd terraform && terraform init
+	cd terraform && terraform plan -out=$(PLAN_OUT)
+	cd terraform && terraform show $(PLAN_OUT)
 
 lint:
 	go run main.go --file $(PLAN_JSON)
