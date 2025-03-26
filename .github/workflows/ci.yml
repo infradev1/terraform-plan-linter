@@ -20,7 +20,6 @@ jobs:
       with:
         terraform_version: 1.5.7
       
-
     - name: Run Make targets
       run: |
         make plan

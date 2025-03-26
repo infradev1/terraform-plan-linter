@@ -5,10 +5,8 @@ PLAN_JSON=tf-plan.json
 
 plan:
 	cd terraform && terraform init -input=false
-	cd terraform && terraform plan -out=$(PLAN_OUT)
-	cat terraform/$(PLAN_OUT)
-	terraform show -json terraform/$(PLAN_OUT) | tee terraform/$(PLAN_JSON) > /dev/null
-	sleep 1 && cat terraform/$(PLAN_JSON)
+	cd terraform && terraform plan -out=$(PLAN_JSON) -json
+	cat terraform/$(PLAN_JSON)
 
 lint:
 	go run main.go --file terraform/$(PLAN_JSON)
