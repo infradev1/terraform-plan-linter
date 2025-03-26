@@ -5,7 +5,7 @@ PLAN_JSON=tf-plan.json
 
 plan:
 	cd terraform && terraform init -input=false
-	cd terraform && terraform plan -out=$(PLAN_JSON) -json
+	cd terraform && terraform plan -json -out=$(PLAN_JSON)
 	cat terraform/$(PLAN_JSON)
 
 lint:
