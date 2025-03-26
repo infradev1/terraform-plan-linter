@@ -9,10 +9,19 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
-    - uses: actions/setup-go@v4
+
+    - name: Set up Go
+      uses: actions/setup-go@v4
       with:
         go-version: '1.24'
-    - run: |
+
+    - name: Set up Terraform
+      uses: hashicorp/setup-terraform@v2
+      with:
+        terraform_version: 1.11.2
+
+    - name: Run Make targets
+      run: |
         make plan
         make lint
         make test
