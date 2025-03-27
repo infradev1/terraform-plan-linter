@@ -68,6 +68,24 @@ resource "aws_iam_role_policy" "permissive_policy" {
   })
 }
 
+resource "aws_iam_role_policy" "lpa_policy" {
+  name = "lpa_policy"
+  role = aws_iam_role.permissive_role.id
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action = [
+          "ec2:Describe*",
+        ]
+        Effect   = "Allow"
+        Resource = "arn:aws:ec2:us-east-1:123456789012:*"
+      },
+    ]
+  })
+}
+
 resource "random_id" "suffix" {
   byte_length = 4
 }

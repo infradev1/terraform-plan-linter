@@ -21,12 +21,12 @@ func TestCheckPublicS3(t *testing.T) {
 	plan := makePlan([]parser.Resource{
 		{
 			Address: "aws_s3_bucket.public_bucket",
-			Type:    "aws_s3_bucket",
+			Type:    parser.S3Bucket,
 			Values:  map[string]any{"acl": "public-read"},
 		},
 		{
 			Address: "aws_s3_bucket.private_bucket",
-			Type:    "aws_s3_bucket",
+			Type:    parser.S3Bucket,
 			Values:  map[string]any{"acl": "private"},
 		},
 	})
@@ -45,12 +45,12 @@ func TestCheckUntaggedBuckets(t *testing.T) {
 	plan := makePlan([]parser.Resource{
 		{
 			Address: "aws_s3_bucket.untagged",
-			Type:    "aws_s3_bucket",
+			Type:    parser.S3Bucket,
 			Values:  map[string]any{}, // no tags
 		},
 		{
 			Address: "aws_s3_bucket.tagged",
-			Type:    "aws_s3_bucket",
+			Type:    parser.S3Bucket,
 			Values:  map[string]any{"tags": map[string]any{"env": "prod"}},
 		},
 	})
@@ -74,14 +74,14 @@ func TestCheckForceDestroy(t *testing.T) {
 		},
 		{
 			Address: "aws_s3_bucket.force_destroy",
-			Type:    "aws_s3_bucket",
+			Type:    parser.S3Bucket,
 			Values: map[string]any{
 				"force_destroy": true,
 			},
 		},
 		{
 			Address: "aws_s3_bucket.prevent_destroy",
-			Type:    "aws_s3_bucket",
+			Type:    parser.S3Bucket,
 			Values: map[string]any{
 				"force_destroy": false,
 				"lifecycle": map[string]any{
@@ -116,6 +116,13 @@ func TestCheckLeastPrivilegeAccess(t *testing.T) {
 			Type:    parser.IAMPolicy,
 			Values: map[string]any{
 				"policy": "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Action\":[\"ec2:Describe*\"],\"Effect\":\"Allow\",\"Resource\":\"*\"}]}",
+			},
+		},
+		{
+			Address: "aws_iam_role_policy.lpa_policy",
+			Type:    parser.IAMPolicy,
+			Values: map[string]any{
+				"policy": "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Action\":[\"ec2:Describe*\"],\"Effect\":\"Allow\",\"Resource\":\"arn:aws:ec2:us-east-1:123456789012:*\"}]}",
 			},
 		},
 	})
