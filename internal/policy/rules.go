@@ -1,6 +1,7 @@
 package policy
 
 import (
+	"regexp"
 	"terraform-plan-linter/internal/parser"
 )
 
@@ -54,6 +55,24 @@ func CheckForceDestroy(plan *parser.Plan) []Violation {
 				violations = append(violations, Violation{
 					Resource: r.Address,
 					Message:  "Critical resource with force_destroy: true",
+				})
+			}
+		}
+	}
+	return violations
+}
+
+// CheckLeastPrivilegeAccess parses IAM policies and finds LPA violations
+func CheckLeastPrivilegeAccess(plan *parser.Plan) []Violation {
+	violations := make([]Violation, 0)
+	for _, r := range parser.AllResources(plan) {
+		if r.Type == parser.IAMPolicy {
+			policy := r.Values["policy"].(string)
+			// Compile the regular expression and find all matches
+			if matches := regexp.MustCompile(`"\*"`).FindAllString(policy, -1); len(matches) > 0 {
+				violations = append(violations, Violation{
+					Resource: r.Address,
+					Message:  "IAM policy is too permissive",
 				})
 			}
 		}

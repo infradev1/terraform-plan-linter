@@ -6,7 +6,10 @@ import (
 	"os"
 )
 
-const S3Bucket string = "aws_s3_bucket"
+const (
+	S3Bucket  string = "aws_s3_bucket"
+	IAMPolicy string = "aws_iam_role_policy"
+)
 
 type Plan struct {
 	PlannedValues PlannedValues `json:"planned_values"`

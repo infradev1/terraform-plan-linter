@@ -108,3 +108,28 @@ func TestCheckForceDestroy(t *testing.T) {
 		}
 	}
 }
+
+func TestCheckLeastPrivilegeAccess(t *testing.T) {
+	plan := makePlan([]parser.Resource{
+		{
+			Address: "aws_iam_role_policy.permissive_policy",
+			Type:    parser.IAMPolicy,
+			Values: map[string]any{
+				"policy": "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Action\":[\"ec2:Describe*\"],\"Effect\":\"Allow\",\"Resource\":\"*\"}]}",
+			},
+		},
+	})
+
+	violations := policy.CheckLeastPrivilegeAccess(plan)
+	if len(violations) != 1 {
+		t.Errorf("expected 1 violation, got %d", len(violations))
+	}
+	expected := map[string]bool{
+		"aws_iam_role_policy.permissive_policy": true,
+	}
+	for _, v := range violations {
+		if _, ok := expected[v.Resource]; !ok {
+			t.Errorf("unexpected violation %s", v.Resource)
+		}
+	}
+}

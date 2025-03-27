@@ -1,4 +1,4 @@
 terraform/.terraform/
 terraform/.terraform*
 terraform/tfplan.binary
-testdata/
+terraform/tf-plan.json

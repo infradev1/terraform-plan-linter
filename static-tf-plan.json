@@ -19,6 +19,38 @@
         "root_module":{
             "resources":[
                 {
+                    "address":"aws_iam_role.permissive_role",
+                    "mode":"managed",
+                    "type":"aws_iam_role",
+                    "name":"permissive_role",
+                    "provider_name":"registry.terraform.io/hashicorp/aws",
+                    "schema_version":0,
+                    "values":{
+                        "assume_role_policy":"{\"Statement\":[{\"Action\":\"sts:AssumeRole\",\"Effect\":\"Allow\",\"Principal\":{\"Service\":\"ec2.amazonaws.com\"},\"Sid\":\"\"}],\"Version\":\"2012-10-17\"}",
+                        "description":null,
+                        "force_detach_policies":false,
+                        "max_session_duration":3600,
+                        "name":"permissive_role",
+                        "path":"/",
+                        "permissions_boundary":null,
+                        "tags":{"env":"MOCK"},
+                        "tags_all":{"env":"MOCK"}},
+                        "sensitive_values":{"inline_policy":[],"managed_policy_arns":[],"tags":{},"tags_all":{}}
+                },
+                {
+                    "address":"aws_iam_role_policy.permissive_policy",
+                    "mode":"managed",
+                    "type":"aws_iam_role_policy",
+                    "name":"permissive_policy",
+                    "provider_name":"registry.terraform.io/hashicorp/aws",
+                    "schema_version":0,
+                    "values":{
+                        "name":"permissive_policy",
+                        "policy":"{\"Version\":\"2012-10-17\",\"Statement\":[{\"Action\":[\"ec2:Describe*\"],\"Effect\":\"Allow\",\"Resource\":\"*\"}]}"
+                    },
+                    "sensitive_values":{}
+                },
+                {
                     "address":"aws_s3_bucket.missing_lifecycle",
                     "mode":"managed",
                     "type":"aws_s3_bucket",
