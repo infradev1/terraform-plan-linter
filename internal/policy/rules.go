@@ -11,8 +11,8 @@ type Violation struct {
 
 func CheckPublicS3(plan *parser.Plan) []Violation {
 	var violations []Violation
-	for _, r := range allResources(plan) {
-		if r.Type == "aws_s3_bucket" {
+	for _, r := range parser.AllResources(plan) {
+		if r.Type == parser.S3Bucket {
 			acl := r.Values["acl"]
 			if acl == "public-read" || acl == "public-read-write" {
 				violations = append(violations, Violation{
@@ -27,8 +27,8 @@ func CheckPublicS3(plan *parser.Plan) []Violation {
 
 func CheckUntaggedBuckets(plan *parser.Plan) []Violation {
 	var violations []Violation
-	for _, r := range allResources(plan) {
-		if r.Type == "aws_s3_bucket" {
+	for _, r := range parser.AllResources(plan) {
+		if r.Type == parser.S3Bucket {
 			if _, ok := r.Values["tags"]; !ok {
 				violations = append(violations, Violation{
 					Resource: r.Address,
@@ -40,26 +40,23 @@ func CheckUntaggedBuckets(plan *parser.Plan) []Violation {
 	return violations
 }
 
-func CheckMissingPreventDestroy(plan *parser.Plan) []Violation {
+func CheckForceDestroy(plan *parser.Plan) []Violation {
 	var violations []Violation
-	for _, r := range allResources(plan) {
-		if r.Type == "aws_db_instance" || r.Type == "aws_s3_bucket" {
-			lifecycle, ok := r.Values["lifecycle"].(map[string]interface{})
-			if !ok || lifecycle["prevent_destroy"] != true {
+	for _, r := range parser.AllResources(plan) {
+		if r.Type == "aws_db_instance" || r.Type == parser.S3Bucket {
+			value, ok := r.Values["force_destroy"].(bool)
+			if !ok {
 				violations = append(violations, Violation{
 					Resource: r.Address,
-					Message:  "Missing lifecycle.prevent_destroy on critical resource",
+					Message:  "Critical resource does not support force_destroy",
+				})
+			} else if value {
+				violations = append(violations, Violation{
+					Resource: r.Address,
+					Message:  "Critical resource with force_destroy: true",
 				})
 			}
 		}
 	}
 	return violations
-}
-
-func allResources(plan *parser.Plan) []parser.Resource {
-	all := plan.PlannedValues.RootModule.Resources
-	for _, child := range plan.PlannedValues.RootModule.ChildModules {
-		all = append(all, child.Resources...)
-	}
-	return all
 }

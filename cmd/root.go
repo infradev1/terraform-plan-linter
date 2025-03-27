@@ -27,7 +27,7 @@ var rootCmd = &cobra.Command{
 		var violations []policy.Violation
 		violations = append(violations, policy.CheckPublicS3(plan)...)
 		violations = append(violations, policy.CheckUntaggedBuckets(plan)...)
-		violations = append(violations, policy.CheckMissingPreventDestroy(plan)...)
+		violations = append(violations, policy.CheckForceDestroy(plan)...)
 
 		if len(violations) == 0 {
 			fmt.Println("✅ No violations found.")

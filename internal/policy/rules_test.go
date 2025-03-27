@@ -65,7 +65,7 @@ func TestCheckUntaggedBuckets(t *testing.T) {
 	}
 }
 
-func TestCheckMissingPreventDestroy(t *testing.T) {
+func TestCheckForceDestroy(t *testing.T) {
 	plan := makePlan([]parser.Resource{
 		{
 			Address: "aws_db_instance.no_lifecycle",
@@ -73,18 +73,17 @@ func TestCheckMissingPreventDestroy(t *testing.T) {
 			Values:  map[string]any{}, // no lifecycle
 		},
 		{
-			Address: "aws_s3_bucket.prevent_destroy_missing",
+			Address: "aws_s3_bucket.force_destroy",
 			Type:    "aws_s3_bucket",
 			Values: map[string]any{
-				"lifecycle": map[string]any{
-					"prevent_destroy": false,
-				},
+				"force_destroy": true,
 			},
 		},
 		{
-			Address: "aws_s3_bucket.prevent_destroy_ok",
+			Address: "aws_s3_bucket.prevent_destroy",
 			Type:    "aws_s3_bucket",
 			Values: map[string]any{
+				"force_destroy": false,
 				"lifecycle": map[string]any{
 					"prevent_destroy": true,
 				},
@@ -92,15 +91,15 @@ func TestCheckMissingPreventDestroy(t *testing.T) {
 		},
 	})
 
-	violations := policy.CheckMissingPreventDestroy(plan)
+	violations := policy.CheckForceDestroy(plan)
 
 	if len(violations) != 2 {
 		t.Errorf("expected 2 violations, got %d", len(violations))
 	}
 
 	expected := map[string]bool{
-		"aws_db_instance.no_lifecycle":          true,
-		"aws_s3_bucket.prevent_destroy_missing": true,
+		"aws_db_instance.no_lifecycle": true,
+		"aws_s3_bucket.force_destroy":  true,
 	}
 
 	for _, v := range violations {
